@@ -33,26 +33,34 @@ export interface BotStatus {
   last_updated: string;
 }
 
-// Dados de fallback / mock para quando o bot não está a correr
-function generateMockStatus(): BotStatus {
+const INITIAL_STATUS: BotStatus = {
+  running: false,
+  symbol: "BTCUSDT",
+  interval: "1m",
+  current_price: 67500,
+  signal: "HOLD",
+  balance: 1000,
+  initial_balance: 1000,
+  crypto_held: 0,
+  entry_price: 0,
+  unrealized_pnl: 0,
+  total_value: 1000,
+  total_return_pct: 0,
+  wins: 0,
+  losses: 0,
+  trades: [],
+  rsi: 50,
+  ema_fast: 67486.65,
+  ema_slow: 67635.15,
+  last_updated: "1970-01-01T00:00:00.000Z",
+};
+
+function randomiseMock(base: BotStatus): BotStatus {
   const price = 67500 + (Math.random() - 0.5) * 400;
   const rsi = 30 + Math.random() * 40;
   return {
-    running: false,
-    symbol: "BTCUSDT",
-    interval: "1m",
+    ...base,
     current_price: price,
-    signal: "HOLD",
-    balance: 1000,
-    initial_balance: 1000,
-    crypto_held: 0,
-    entry_price: 0,
-    unrealized_pnl: 0,
-    total_value: 1000,
-    total_return_pct: 0,
-    wins: 0,
-    losses: 0,
-    trades: [],
     rsi,
     ema_fast: price * 0.9998,
     ema_slow: price * 1.0002,
@@ -61,7 +69,7 @@ function generateMockStatus(): BotStatus {
 }
 
 export function useBotData(pollInterval = 5000) {
-  const [status, setStatus] = useState<BotStatus>(generateMockStatus());
+  const [status, setStatus] = useState<BotStatus>(INITIAL_STATUS);
   const [connected, setConnected] = useState(false);
   const [priceHistory, setPriceHistory] = useState<{ time: string; price: number }[]>([]);
 
@@ -81,13 +89,16 @@ export function useBotData(pollInterval = 5000) {
       });
     } catch {
       setConnected(false);
-      // Simular movimento de preço em modo offline
-      setStatus((prev) => ({
-        ...prev,
-        current_price: prev.current_price + (Math.random() - 0.5) * 80,
-        rsi: Math.max(10, Math.min(90, prev.rsi + (Math.random() - 0.5) * 3)),
-        last_updated: new Date().toISOString(),
-      }));
+      setStatus((prev) => {
+        const isInitial = prev.last_updated === INITIAL_STATUS.last_updated;
+        if (isInitial) return randomiseMock(prev);
+        return {
+          ...prev,
+          current_price: prev.current_price + (Math.random() - 0.5) * 80,
+          rsi: Math.max(10, Math.min(90, prev.rsi + (Math.random() - 0.5) * 3)),
+          last_updated: new Date().toISOString(),
+        };
+      });
       setPriceHistory((prev) => {
         const last = prev[prev.length - 1];
         const newPrice = last ? last.price + (Math.random() - 0.5) * 80 : 67500;

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #090b0f;
+  color: #c8d4e8;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(26, 32, 48, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 32, 48, 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.scanlines {
+  position: relative;
+}
+
+.scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}

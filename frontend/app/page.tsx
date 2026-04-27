@@ -178,7 +178,7 @@ export default function Dashboard() {
       </main>
 
       {/* ── Footer ─────────────────────────────── */}
-      <footer className="border-t border-border/40 px-6 py-3 flex items-center justify-between">
+      <footer className="display-block border-t border-border/40 px-6 py-3 flex items-center justify-between">
         <span className="text-[#253040] text-[10px] font-mono tracking-wide">
           PAPER TRADING — Nenhum dinheiro real envolvido
         </span>

@@ -76,8 +76,9 @@ export function useBotData(pollInterval = 5000) {
   const fetchStatus = useCallback(async () => {
     try {
       const res = await fetch("/api/bot/status", { cache: "no-store" });
-      if (!res.ok) throw new Error("Backend offline");
-      const data: BotStatus = await res.json();
+      const json = await res.json();
+      if (!json._connected) throw new Error("Backend offline");
+      const { _connected: _, ...data } = json as BotStatus & { _connected: boolean };
       setStatus(data);
       setConnected(true);
       setPriceHistory((prev) => {

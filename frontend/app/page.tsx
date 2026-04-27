@@ -79,16 +79,16 @@ export default function Dashboard() {
             className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default"
             suppressHydrationWarning
           >
-            ${status.current_price.toLocaleString("pt-PT", { minimumFractionDigits: 2 })}
+            
           </span>
           <span
             className={clsx("text-sm font-mono font-600", isUp ? "text-green" : "text-red")}
             suppressHydrationWarning
           >
-            {isUp ? "▲ +" : "▼ "}{priceChangePct.toFixed(2)}%
+           
           </span>
           <span className="hidden sm:inline text-dim text-xs border border-border rounded px-2 py-0.5">
-            {status.symbol}
+         
           </span>
         </div>
         <div className="flex items-center gap-4">

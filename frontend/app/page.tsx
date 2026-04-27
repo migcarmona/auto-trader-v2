@@ -33,7 +33,7 @@ export default function Dashboard() {
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg border border-cyan/20 bg-cyan/5 flex items-center justify-center text-cyan text-base select-none">
-            ⌬
+            <img src="/favicon.ico" alt="Logo" className="w-4 h-4" />
           </div>
           <div className="leading-none">
             <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AutoTrader</div>

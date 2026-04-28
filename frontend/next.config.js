@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/api/bot/:path*",
-        destination: "auto-trader-v2-production.up.railway.app",
+        destination: "https://auto-trader-v2-production.up.railway.app",
       },
     ];
   },

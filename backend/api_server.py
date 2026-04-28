@@ -6,6 +6,7 @@ Instalar: pip install fastapi uvicorn --break-system-packages
 Correr:   python api_server.py  (na pasta /backend)
 """
 
+import os
 import json
 import threading
 import logging
@@ -26,9 +27,11 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="AutoTrader API")
 
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -150,4 +153,5 @@ def update_config(body: dict):
 if __name__ == "__main__":
     import uvicorn
     Path("logs").mkdir(exist_ok=True)
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)

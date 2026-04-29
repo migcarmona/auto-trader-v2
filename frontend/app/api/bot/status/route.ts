@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const res = await fetch(`${BACKEND}/status`, {
       cache: "no-store",
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(5000),
     });
     if (!res.ok) return NextResponse.json({ _connected: false });
     const data = await res.json();

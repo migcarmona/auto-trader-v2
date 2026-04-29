@@ -59,7 +59,7 @@ class DataFetcher:
             df["open_time"] = pd.to_datetime(df["open_time"].astype(int), unit="ms")
             df.set_index("open_time", inplace=True)
 
-            logger.debug(f"Dados obtidos: {len(df)} velas | Último fecho: {df['close'].iloc[-1]:.4f}")
+            logger.info(f"Dados obtidos: {len(df)} velas | Último fecho: {df['close'].iloc[-1]:.4f}")
             return df
 
         except requests.exceptions.RequestException as e:

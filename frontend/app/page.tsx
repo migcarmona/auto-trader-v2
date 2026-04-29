@@ -98,9 +98,15 @@ export default function Dashboard() {
            v2
           </span>
           <span className="hidden sm:inline text-dim text-xs border border-border rounded px-2 py-0.5">
-         Wallet: Paper Trading
+         Wallet: ...
           </span>
         </div>
+        <div className="hidden md:flex items-center gap-2 pl-3 ml-1 border-l border-border">
+            <span className="text-xs font-mono text-dim">{status.symbol}</span>
+            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
+              {status.interval}
+            </span>
+          </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />

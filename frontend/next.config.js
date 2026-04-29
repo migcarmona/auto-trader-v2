@@ -1,13 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: "/api/bot/:path*",
-        destination: "https://auto-trader-v2-production.up.railway.app",
-      },
-    ];
-  },
-};
+const nextConfig = {};
 
 module.exports = nextConfig;

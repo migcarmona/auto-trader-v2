@@ -48,6 +48,16 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-4">
+          {connected && (
+            <span className={clsx(
+              "text-[10px] font-mono font-600 px-2 py-0.5 rounded border tracking-wider uppercase",
+              status.trading_mode === "live"
+                ? "border-red/40 bg-red/10 text-red"
+                : "border-blue/30 bg-blue/5 text-blue"
+            )}>
+              {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER"}
+            </span>
+          )}
           <div className="flex items-center gap-1.5 text-xs">
             <div className={clsx(
               "w-1.5 h-1.5 rounded-full",
@@ -88,7 +98,7 @@ export default function Dashboard() {
            v2
           </span>
           <span className="hidden sm:inline text-dim text-xs border border-border rounded px-2 py-0.5">
-         Wallet: {status.wallet_address ? `${status.wallet_address.slice(0, 6)}...${status.wallet_address.slice(-4)}` : "Paper Trading"}
+         Wallet: Paper Trading
           </span>
         </div>
         <div className="flex items-center gap-4">

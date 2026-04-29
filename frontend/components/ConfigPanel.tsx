@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import clsx from "clsx";
 
 interface Config {
   symbol: string;
@@ -10,6 +11,7 @@ interface Config {
   take_profit_pct: number;
   rsi_oversold: number;
   rsi_overbought: number;
+  trading_mode: "paper" | "live";
 }
 
 const defaultConfig: Config = {
@@ -20,6 +22,7 @@ const defaultConfig: Config = {
   take_profit_pct: 1.0,
   rsi_oversold: 35,
   rsi_overbought: 65,
+  trading_mode: "paper",
 };
 
 interface FieldProps {
@@ -73,12 +76,23 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function ConfigPanel() {
   const [cfg, setCfg] = useState<Config>(defaultConfig);
   const [saved, setSaved] = useState(false);
+  const [liveWarning, setLiveWarning] = useState(false);
 
   const update = (key: keyof Config) => (val: string) => {
+    if (key === "trading_mode" && val === "live") {
+      setLiveWarning(true);
+      return;
+    }
     setCfg((prev) => ({
       ...prev,
       [key]: typeof prev[key] === "number" ? parseFloat(val) || 0 : val,
     }));
+    setSaved(false);
+  };
+
+  const confirmLive = () => {
+    setCfg((prev) => ({ ...prev, trading_mode: "live" }));
+    setLiveWarning(false);
     setSaved(false);
   };
 
@@ -98,9 +112,61 @@ export default function ConfigPanel() {
     <div className="card-border rounded-lg p-4 flex flex-col gap-3">
       <span className="text-[10px] text-dim uppercase tracking-[0.12em]">Configuração</span>
 
+      {/* Trading Mode Toggle */}
+      <div className="flex rounded-lg overflow-hidden border border-border">
+        <button
+          onClick={() => update("trading_mode")("paper")}
+          className={clsx(
+            "flex-1 py-2 text-[11px] font-mono font-600 tracking-wider uppercase transition-all duration-200",
+            cfg.trading_mode === "paper"
+              ? "bg-blue/15 text-blue"
+              : "text-dim hover:text-text"
+          )}
+        >
+          Paper
+        </button>
+        <div className="w-px bg-border" />
+        <button
+          onClick={() => update("trading_mode")("live")}
+          className={clsx(
+            "flex-1 py-2 text-[11px] font-mono font-600 tracking-wider uppercase transition-all duration-200",
+            cfg.trading_mode === "live"
+              ? "bg-red/15 text-red"
+              : "text-dim hover:text-text"
+          )}
+        >
+          ⚠ Live
+        </button>
+      </div>
+
+      {/* Live warning */}
+      {liveWarning && (
+        <div className="border border-red/30 bg-red/5 rounded-lg p-3 flex flex-col gap-2">
+          <span className="text-red text-[11px] font-600">Atenção — Dinheiro Real</span>
+          <span className="text-dim text-[10px] leading-relaxed">
+            Em modo Live, o bot executa ordens reais na Kraken com o teu dinheiro.
+            Certifica-te que tens KRAKEN_API_KEY e KRAKEN_API_SECRET definidas no Railway.
+          </span>
+          <div className="flex gap-2 mt-1">
+            <button
+              onClick={confirmLive}
+              className="flex-1 py-1.5 rounded border border-red/40 bg-red/10 text-red text-[10px] font-600 uppercase tracking-wider hover:bg-red/20 transition-all"
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => setLiveWarning(false)}
+              className="flex-1 py-1.5 rounded border border-border text-dim text-[10px] uppercase tracking-wider hover:text-text transition-all"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col">
         <SectionLabel>Par / Intervalo</SectionLabel>
-        <Field label="Par" value={cfg.symbol} onChange={update("symbol")} options={["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"]} />
+        <Field label="Par" value={cfg.symbol} onChange={update("symbol")} options={["BTCUSDT", "ETHUSDT", "SOLUSDT"]} />
         <Field label="Intervalo" value={cfg.interval} onChange={update("interval")} options={["1m", "3m", "5m", "15m"]} />
 
         <SectionLabel>Gestão de risco</SectionLabel>

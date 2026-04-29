@@ -13,6 +13,7 @@ export interface Trade {
 
 export interface BotStatus {
   running: boolean;
+  trading_mode: "paper" | "live";
   symbol: string;
   interval: string;
   current_price: number;
@@ -35,6 +36,7 @@ export interface BotStatus {
 
 const INITIAL_STATUS: BotStatus = {
   running: false,
+  trading_mode: "paper",
   symbol: "BTCUSDT",
   interval: "1m",
   current_price: 67500,

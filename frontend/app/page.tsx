@@ -36,7 +36,7 @@ export default function Dashboard() {
             <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
           </div>
           <div className="leading-none">
-            <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AutoTrader</div>
+            <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AstraX</div>
             <div className="text-[10px] text-dim tracking-wide mt-0.5">Scalping Engine</div>
           </div>
           <div className="hidden md:flex items-center gap-2 pl-3 ml-1 border-l border-border">
@@ -79,16 +79,16 @@ export default function Dashboard() {
             className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default"
             suppressHydrationWarning
           >
-            
+            Auto Trader
           </span>
           <span
             className={clsx("text-sm font-mono font-600", isUp ? "text-green" : "text-red")}
             suppressHydrationWarning
           >
-           
+           v2
           </span>
           <span className="hidden sm:inline text-dim text-xs border border-border rounded px-2 py-0.5">
-         
+         Wallet: {status.wallet_address ? `${status.wallet_address.slice(0, 6)}...${status.wallet_address.slice(-4)}` : "Paper Trading"}
           </span>
         </div>
         <div className="flex items-center gap-4">

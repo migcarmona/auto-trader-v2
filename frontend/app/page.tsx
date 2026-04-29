@@ -39,12 +39,6 @@ export default function Dashboard() {
             <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AstraX</div>
             <div className="text-[10px] text-dim tracking-wide mt-0.5">Scalping Engine</div>
           </div>
-          <div className="hidden md:flex items-center gap-2 pl-3 ml-1 border-l border-border">
-            <span className="text-xs font-mono text-dim">{status.symbol}</span>
-            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
-              {status.interval}
-            </span>
-          </div>
         </div>
 
         <div className="flex items-center gap-4">
@@ -101,24 +95,18 @@ export default function Dashboard() {
          Wallet: ...
           </span>
         </div>
-        <div className="hidden md:flex items-center gap-2 pl-3 ml-1 border-l border-border">
-            <span className="text-xs font-mono text-dim">{status.symbol}</span>
-            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
-              {status.interval}
-            </span>
-          </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-            <span className="text-[10px] text-dim font-mono tracking-[0.15em]">LIVE</span>
-          </div>
-          <div className="text-dim text-xs font-mono" suppressHydrationWarning>
-            {new Date(status.last_updated).toLocaleTimeString("pt-PT")}
-          </div>
           <span className="text-xs font-mono text-dim">{status.symbol}</span>
             <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
               {status.interval}
             </span>
+          <div className="text-dim text-xs font-mono border-l border-border pl-4" suppressHydrationWarning>
+            {new Date(status.last_updated).toLocaleTimeString("pt-PT")}
+          </div>
+          <div className="flex items-center gap-1.5 border-l border-border pl-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+            <span className="text-[10px] text-dim font-mono tracking-[0.15em]">LIVE</span>
+          </div>
         </div>
       </div>
 

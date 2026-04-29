@@ -115,6 +115,10 @@ export default function Dashboard() {
           <div className="text-dim text-xs font-mono" suppressHydrationWarning>
             {new Date(status.last_updated).toLocaleTimeString("pt-PT")}
           </div>
+          <span className="text-xs font-mono text-dim">{status.symbol}</span>
+            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
+              {status.interval}
+            </span>
         </div>
       </div>
 

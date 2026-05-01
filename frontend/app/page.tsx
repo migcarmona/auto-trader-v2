@@ -6,6 +6,7 @@ import PriceChart from "@/components/PriceChart";
 import TradeHistory from "@/components/TradeHistory";
 import Indicators from "@/components/Indicators";
 import ConfigPanel from "@/components/ConfigPanel";
+import WalletButton from "@/components/WalletButton";
 import clsx from "clsx";
 
 export default function Dashboard() {
@@ -91,9 +92,7 @@ export default function Dashboard() {
           >
            v2
           </span>
-          <span className="hidden sm:inline text-dim text-xs border border-border rounded px-2 py-0.5">
-         Wallet: ...
-          </span>
+          <WalletButton />
         </div>
         <div className="flex items-center gap-4">
           <span className="text-xs font-mono text-dim">{status.symbol}</span>

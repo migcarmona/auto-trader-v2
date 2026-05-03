@@ -41,10 +41,7 @@ export default function Dashboard() {
             <div className="text-[10px] text-dim tracking-wide mt-0.5">Scalping Engine</div>
           </div>
           <div className="ml-4 flex items-baseline gap-2 text-center">
-            <span
-            className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default"
-            suppressHydrationWarning
-          >
+            <span className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default" suppressHydrationWarning>
             Auto Trader
           </span>
           <span
@@ -64,19 +61,49 @@ export default function Dashboard() {
                 ? "border-red/40 bg-red/10 text-red"
                 : "border-blue/30 bg-blue/5 text-blue"
             )}>
-              {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER"}
+              {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER MONEY"}
             </span>
           )}
           <div className="flex items-center gap-1.5 text-xs">
-            <div className={clsx(
+           
+          </div>
+          <WalletButton />
+        </div>
+      </header>
+
+      {/* ── Price banner ───────────────────────── */}
+      <div className="border-b border-border/40 px-6 py-4 flex items-center justify-between gap-5"
+        style={{ background: "rgba(13,17,23,0.6)" }}>
+       
+        <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-1.5 pl-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+            <span className="text-[10px] text-dim font-mono tracking-[0.15em]">LIVE</span>
+          </div>
+
+          <div className="flex items-baseline gap-2 text-dim text-xs font-mono border-l border-border pl-4">
+            <span className="text-xs font-mono text-dim border-l border-border">{status.symbol}</span>
+            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
+              {status.interval}
+             </span>
+          </div>
+
+          <div className="text-dim text-xs font-mono border-l border-border pl-4" suppressHydrationWarning>
+            {new Date(status.last_updated).toLocaleTimeString("pt-PT")}
+          </div>
+        
+        </div>
+
+         <div className="flex items-baseline gap-3">
+           <div className={clsx(
               "w-1.5 h-1.5 rounded-full",
               connected ? "bg-green animate-pulse" : "bg-red"
             )} />
             <span className={clsx("text-[11px] font-mono", connected ? "text-dim" : "text-red/70")}>
-              {connected ? "LIGADO" : "MODO DEMO"}
+              {connected ? "READY" : "OFFLINE"}
             </span>
-          </div>
-          <button
+         <button
             onClick={status.running ? stopBot : startBot}
             className={clsx(
               "px-4 py-1.5 rounded text-[11px] font-mono font-600 tracking-widest uppercase border transition-all duration-200",
@@ -85,41 +112,9 @@ export default function Dashboard() {
                 : "border-green/40 bg-green/10 text-green hover:bg-green/20 hover:border-green/60"
             )}
           >
-            {status.running ? "■ PARAR" : "▶ INICIAR"}
+            
+            {status.running ? "■ PARAR BOT" : "▶ INICIAR BOT"}
           </button>
-        </div>
-      </header>
-
-      {/* ── Price banner ───────────────────────── */}
-      <div className="border-b border-border/40 px-6 py-4 flex items-center justify-between"
-        style={{ background: "rgba(13,17,23,0.6)" }}>
-        <div className="flex items-baseline gap-3">
-          <span
-            className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default"
-            suppressHydrationWarning
-          >
-            Auto Trader
-          </span>
-          <span
-            className={clsx("text-sm font-mono font-600", isUp ? "text-green" : "text-red")}
-            suppressHydrationWarning
-          >
-           v2
-          </span>
-          <WalletButton />
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-mono text-dim">{status.symbol}</span>
-            <span className="text-[10px] text-dim px-1.5 py-0.5 bg-surface border border-border rounded">
-              {status.interval}
-            </span>
-          <div className="text-dim text-xs font-mono border-l border-border pl-4" suppressHydrationWarning>
-            {new Date(status.last_updated).toLocaleTimeString("pt-PT")}
-          </div>
-          <div className="flex items-center gap-1.5 border-l border-border pl-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-            <span className="text-[10px] text-dim font-mono tracking-[0.15em]">LIVE</span>
-          </div>
         </div>
       </div>
 

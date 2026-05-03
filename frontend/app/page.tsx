@@ -40,6 +40,20 @@ export default function Dashboard() {
             <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AstraX</div>
             <div className="text-[10px] text-dim tracking-wide mt-0.5">Scalping Engine</div>
           </div>
+          <div className="ml-4 flex items-baseline gap-2 text-center">
+            <span
+            className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default"
+            suppressHydrationWarning
+          >
+            Auto Trader
+          </span>
+          <span
+            className={clsx("text-sm font-mono font-600", isUp ? "text-green" : "text-red")}
+            suppressHydrationWarning
+          >
+           v2
+          </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">

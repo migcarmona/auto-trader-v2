@@ -7,6 +7,7 @@ import TradeHistory from "@/components/TradeHistory";
 import Indicators from "@/components/Indicators";
 import ConfigPanel from "@/components/ConfigPanel";
 import WalletButton from "@/components/WalletButton";
+import Link from "next/link";
 import clsx from "clsx";
 
 export default function Dashboard() {
@@ -32,29 +33,28 @@ export default function Dashboard() {
         className="border-b border-border/60 px-6 py-3.5 flex items-center justify-between sticky top-0 z-10"
         style={{ background: "rgba(9,11,15,0.92)", backdropFilter: "blur(16px)" }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 grid grid-cols-3">
           <div className="w-8 h-8 rounded-lg border border-cyan/20 bg-cyan/5 flex items-center justify-center text-cyan text-base select-none">
             <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
           </div>
-          <div className="leading-none">
-            <div className="font-display font-700 text-sm tracking-widest uppercase text-text">AstraX</div>
-            <div className="text-[10px] text-dim tracking-wide mt-0.5">Scalping Engine</div>
+          <div className="">
+            <div className="font-display font-700 text-sm tracking-widest uppercase text-text">
+              AstraX
+            </div>
+            <div className="text-[10px] text-dim tracking-wide mt-0.5">
+              Scalping Engine
+            </div>
           </div>
           <div className="ml-4 flex items-baseline gap-2 text-center">
             <span className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default" suppressHydrationWarning>
             Auto Trader
-          </span>
-          <span
-            className={clsx("text-sm font-mono font-600", isUp ? "text-green" : "text-red")}
-            suppressHydrationWarning
-          >
-           v2
-          </span>
+            </span>
+            <span className="text-green">
+              v2
+            </span>
           </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {connected && (
+          <div className="flex items-center gap-4">
+            {connected && (
             <span className={clsx(
               "text-[10px] font-mono font-600 px-2 py-0.5 rounded border tracking-wider uppercase",
               status.trading_mode === "live"
@@ -63,11 +63,17 @@ export default function Dashboard() {
             )}>
               {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER MONEY"}
             </span>
-          )}
-          <div className="flex items-center gap-1.5 text-xs">
-           
+            )}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/profile"
+              className="px-3 py-1.5 rounded border border-border/60 bg-surface text-dim text-[11px] font-mono tracking-wider uppercase hover:border-cyan/30 hover:text-text transition-all duration-200"
+            >
+              Perfil
+            </Link>
+            <WalletButton />
           </div>
-          <WalletButton />
+          </div>
         </div>
       </header>
 

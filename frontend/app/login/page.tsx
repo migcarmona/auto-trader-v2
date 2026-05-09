@@ -28,8 +28,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="font-display font-700 text-2xl tracking-widest uppercase text-cyan text-glow-cyan">AstraX</div>
-          <div className="text-[11px] text-dim tracking-[0.2em] uppercase mt-1">Scalping Engine</div>
+          <div className="font-display font-700 text-2xl tracking-widest uppercase text-cyan text-glow-cyan">Auto Trader</div>
+          <div className="text-[11px] text-dim tracking-[0.2em] uppercase mt-1">AstraX Scalping Engine</div>
         </div>
 
         <div className="card-border rounded-lg p-6">

@@ -34,25 +34,35 @@ export default function Dashboard() {
         style={{ background: "rgba(9,11,15,0.92)", backdropFilter: "blur(16px)" }}
       >
         <div className="flex items-center gap-3 grid grid-cols-3">
-          <div className="w-8 h-8 rounded-lg border border-cyan/20 bg-cyan/5 flex items-center justify-center text-cyan text-base select-none">
-            <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
-          </div>
+          <div id="logo">
+
+            <div className="flex items-center justify-center">
+              <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
+            </div>
+
             <div className="font-display font-700 text-sm tracking-widest uppercase text-text">
               AstraX
             </div>
+
             <div className="text-[10px] text-dim tracking-wide mt-0.5">
               Scalping Engine
             </div>
-            </div>
-            <div className="ml-4 flex items-baseline gap-2 text-center">
+
+          </div>
+          
+          <div id="title" className="ml-4 flex items-baseline gap-2 text-center">
+
             <span className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default" suppressHydrationWarning>
-            Auto Trader
+              Auto Trader
             </span>
+
             <span className="text-green">
               v2
-              </span>
+            </span>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div id="buttons" className="flex items-center gap-4">
+
             {connected && (
             <span className={clsx(
               "text-[10px] font-mono font-600 px-2 py-0.5 rounded border tracking-wider uppercase",
@@ -63,16 +73,20 @@ export default function Dashboard() {
               {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER MONEY"}
             </span>
             )}
-          <div className="flex items-center gap-2">
-            <Link
-              href="/profile"
-              className="px-3 py-1.5 rounded border border-border/60 bg-surface text-dim text-[11px] font-mono tracking-wider uppercase hover:border-cyan/30 hover:text-text transition-all duration-200"
-            >
+
+            <div className="flex items-center gap-2">
+
+             <Link
+               href="/profile"
+                className="px-3 py-1.5 rounded border border-border/60 bg-surface text-dim text-[11px] font-mono tracking-wider uppercase hover:border-cyan/30 hover:text-text transition-all duration-200">
               Perfil
-            </Link>
-            <WalletButton />
+              </Link>
+
+              <WalletButton />
+
             </div>
           </div>
+        </div>
 
       </header>
 
@@ -201,7 +215,9 @@ export default function Dashboard() {
       {/* ── Footer ─────────────────────────────── */}
       <footer className="display-block border-t border-border/40 px-6 py-3 flex items-center justify-between">
         <span className="text-[#253040] text-[10px] font-mono tracking-wide">
-          PAPER TRADING — Nenhum dinheiro real envolvido
+          2026 - Powered by <a href="https://astraxcoin.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            AstraX Coin
+          </a>
         </span>
         <span className="text-[#253040] text-[10px] font-mono" suppressHydrationWarning>
           Binance API · {new Date().getFullYear()}

@@ -34,9 +34,9 @@ export default function Dashboard() {
         style={{ background: "rgba(9,11,15,0.92)", backdropFilter: "blur(16px)" }}
       >
           <Link href="https://astraxcoin.com" target="_blank" className="flex items-center gap-3">
-              <img src="/favicon.ico" alt="Logo" className="w-6 h-6 sm:flex-cols" />
+              <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
               <div className="font-display font-700 text-sm tracking-widest uppercase text-cyan text-glow-cyan">AstraX</div>
-              <div className="text-[12px] text-dim tracking-wide">Auto Trader (v2)</div>
+              <div className="text-[12px] text-dim tracking-wide sm:flex-col">Auto Trader (v2)</div>
           </Link>
 
           <div id="buttons" className="flex items-center justify-end gap-4">

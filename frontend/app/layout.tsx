@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
+import dynamic from "next/dynamic";
+
+const Providers = dynamic(
+  () => import("./providers").then((m) => ({ default: m.Providers })),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "AstraX — Scalping Engine",

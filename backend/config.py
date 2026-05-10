@@ -26,8 +26,8 @@ class Config:
 
     # ─── Indicadores ─────────────────────────────────────────
     RSI_PERIOD = 14
-    RSI_OVERSOLD = 45
-    RSI_OVERBOUGHT = 55
+    RSI_OVERSOLD = 35
+    RSI_OVERBOUGHT = 65
     EMA_FAST = 9
     EMA_SLOW = 21
     VOLUME_MULTIPLIER = 1.2

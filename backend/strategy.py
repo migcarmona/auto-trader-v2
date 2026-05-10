@@ -58,12 +58,14 @@ class ScalpingStrategy:
         golden_cross = pema_fast <= pema_slow and ema_fast > ema_slow
         death_cross  = pema_fast >= pema_slow and ema_fast < ema_slow
 
-        if golden_cross and rsi < cfg.RSI_OVERSOLD:
-            logger.info(f"✅ BUY — Golden Cross + RSI {rsi:.1f} < {cfg.RSI_OVERSOLD}")
+        # RSI usado como filtro de bloqueio: evita comprar em território muito sobrecomprado
+        # ou vender em território muito sobrevendido — não exige extremos
+        if golden_cross and rsi < cfg.RSI_OVERBOUGHT:
+            logger.info(f"✅ BUY — Golden Cross + RSI {rsi:.1f} < {cfg.RSI_OVERBOUGHT}")
             return "BUY"
 
-        if death_cross and rsi > cfg.RSI_OVERBOUGHT:
-            logger.info(f"🔴 SELL — Death Cross + RSI {rsi:.1f} > {cfg.RSI_OVERBOUGHT}")
+        if death_cross and rsi > cfg.RSI_OVERSOLD:
+            logger.info(f"🔴 SELL — Death Cross + RSI {rsi:.1f} > {cfg.RSI_OVERSOLD}")
             return "SELL"
 
         return "HOLD"

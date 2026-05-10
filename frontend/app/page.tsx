@@ -26,43 +26,20 @@ export default function Dashboard() {
   const isUp = priceChangePct >= 0;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen w-full flex flex-col">
 
       {/* ── Header ─────────────────────────────── */}
       <header
         className="border-b border-border/60 px-6 py-3.5 flex items-center justify-between sticky top-0 z-10"
         style={{ background: "rgba(9,11,15,0.92)", backdropFilter: "blur(16px)" }}
       >
-        <div className="flex items-center gap-3 grid grid-cols-3">
-          <div id="logo">
-
-            <div className="flex items-center justify-center">
+          <Link href="https://astraxcoin.com" target="_blank" className="flex items-center gap-3">
               <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
-            </div>
+              <div className="font-display font-700 text-sm tracking-widest uppercase text-cyan text-glow-cyan">AstraX</div>
+              <div className="text-[12px] text-dim tracking-wide">Auto Trader (v2)</div>
+          </Link>
 
-            <div className="font-display font-700 text-sm tracking-widest uppercase text-text">
-              AstraX
-            </div>
-
-            <div className="text-[10px] text-dim tracking-wide mt-0.5">
-              Scalping Engine
-            </div>
-
-          </div>
-          
-          <div id="title" className="ml-4 flex items-baseline gap-2 text-center">
-
-            <span className="font-display font-800 text-4xl text-cyan text-glow-cyan cursor-default" suppressHydrationWarning>
-              Auto Trader
-            </span>
-
-            <span className="text-green">
-              v2
-            </span>
-          </div>
-
-          <div id="buttons" className="flex items-center gap-4">
-
+          <div id="buttons" className="flex items-center justify-end gap-4">
             {connected && (
             <span className={clsx(
               "text-[10px] font-mono font-600 px-2 py-0.5 rounded border tracking-wider uppercase",
@@ -73,25 +50,17 @@ export default function Dashboard() {
               {status.trading_mode === "live" ? "⚠ LIVE" : "PAPER MONEY"}
             </span>
             )}
-
             <div className="flex items-center gap-2">
-
-             <Link
-               href="/profile"
-                className="px-3 py-1.5 rounded border border-border/60 bg-surface text-dim text-[11px] font-mono tracking-wider uppercase hover:border-cyan/30 hover:text-text transition-all duration-200">
+             <Link href="/profile" className="px-3 py-1.5 rounded border border-border/60 bg-surface text-dim text-[11px] font-mono tracking-wider uppercase hover:border-cyan/30 hover:text-text transition-all duration-200">
               Perfil
               </Link>
-
               <WalletButton />
-
             </div>
           </div>
-        </div>
-
       </header>
 
       {/* ── Price banner ───────────────────────── */}
-      <div className="border-b border-border/40 px-6 py-4 flex items-center justify-between gap-5"
+      <div className="border-b border-border/40 flex items-center justify-between gap-5 p-6 max-w-7xl mx-auto w-full"
         style={{ background: "rgba(13,17,23,0.6)" }}>
        
         <div className="flex items-center gap-4">
@@ -115,13 +84,7 @@ export default function Dashboard() {
         </div>
 
          <div className="flex items-baseline gap-3">
-           <div className={clsx(
-              "w-1.5 h-1.5 rounded-full",
-              connected ? "bg-green animate-pulse" : "bg-red"
-            )} />
-            <span className={clsx("text-[11px] font-mono", connected ? "text-dim" : "text-red/70")}>
-              {connected ? "READY" : "OFFLINE"}
-            </span>
+          
          <button
             onClick={status.running ? stopBot : startBot}
             className={clsx(
@@ -131,9 +94,15 @@ export default function Dashboard() {
                 : "border-green/40 bg-green/10 text-green hover:bg-green/20 hover:border-green/60"
             )}
           >
-            
             {status.running ? "■ PARAR BOT" : "▶ INICIAR BOT"}
           </button>
+          <div className={clsx(
+              "w-1.5 h-1.5 rounded-full",
+              connected ? "bg-green animate-pulse" : "bg-red"
+            )} />
+            <span className={clsx("text-[11px] font-mono", connected ? "text-dim" : "text-red/70")}>
+              {connected ? "READY" : "OFFLINE"}
+            </span>
         </div>
       </div>
 

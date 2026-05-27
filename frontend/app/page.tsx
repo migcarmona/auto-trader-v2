@@ -61,8 +61,11 @@ export default function Dashboard() {
         <Link href="https://www.astraxcoin.com" target="_blank" className="flex items-center gap-3">
           <img src="/favicon.ico" alt="Logo" className="w-6 h-6" />
           </Link>
-          <div className="font-display font-700 text-sm tracking-widest uppercase text-cyan text-glow-cyan">Auto Trader</div>
-          <div className="text-[12px] text-dim tracking-wide sm:flex-col">v2.0</div>
+          <div className="flex items-center gap-3">
+            <div className="font-display font-700 text-sm tracking-widest uppercase text-cyan text-glow-cyan">Auto Trader</div>
+            <div className="text-[12px] text-dim tracking-wide sm:flex-col">v2.0</div>
+          </div>
+          
 
         <div id="buttons" className="flex items-center justify-end gap-4">
           {connected && (

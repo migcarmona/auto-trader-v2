@@ -4,10 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 
 export interface Trade {
   type: "BUY" | "SELL";
+  reason?: string;
   price: number;
   quantity: number;
   pnl?: number;
   pnl_pct?: number;
+  fee?: number;
   time: string;
 }
 
@@ -34,83 +36,68 @@ export interface BotStatus {
   last_updated: string;
 }
 
+// FIX: defaults corretos e seguros — usados como fallback em qualquer campo ausente
 const INITIAL_STATUS: BotStatus = {
-  running: false,
-  trading_mode: "paper",
-  symbol: "BTCUSDT",
-  interval: "1m",
-  current_price: 67500,
-  signal: "HOLD",
-  balance: 1000,
-  initial_balance: 1000,
-  crypto_held: 0,
-  entry_price: 0,
-  unrealized_pnl: 0,
-  total_value: 1000,
+  running:          false,
+  trading_mode:     "paper",
+  symbol:           "XBTUSDT",   // FIX: era "BTCUSDT"
+  interval:         "5",         // FIX: era "1m"
+  current_price:    0,           // FIX: era 67500 hardcoded
+  signal:           "HOLD",
+  balance:          1000,
+  initial_balance:  1000,
+  crypto_held:      0,
+  entry_price:      0,
+  unrealized_pnl:   0,
+  total_value:      1000,
   total_return_pct: 0,
-  wins: 0,
-  losses: 0,
-  trades: [],
-  rsi: 50,
-  ema_fast: 67486.65,
-  ema_slow: 67635.15,
-  last_updated: "1970-01-01T00:00:00.000Z",
+  wins:             0,
+  losses:           0,
+  trades:           [],
+  rsi:              50,
+  ema_fast:         0,
+  ema_slow:         0,
+  last_updated:     "",
 };
 
-function randomiseMock(base: BotStatus): BotStatus {
-  const price = 67500 + (Math.random() - 0.5) * 400;
-  const rsi = 30 + Math.random() * 40;
-  return {
-    ...base,
-    current_price: price,
-    rsi,
-    ema_fast: price * 0.9998,
-    ema_slow: price * 1.0002,
-    last_updated: new Date().toISOString(),
-  };
-}
-
 export function useBotData(pollInterval = 5000) {
-  const [status, setStatus] = useState<BotStatus>(INITIAL_STATUS);
-  const [connected, setConnected] = useState(false);
+  const [status, setStatus]           = useState<BotStatus>(INITIAL_STATUS);
+  const [connected, setConnected]     = useState(false);
   const [priceHistory, setPriceHistory] = useState<{ time: string; price: number }[]>([]);
 
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await fetch("/api/bot/status", { cache: "no-store" });
+      const res  = await fetch("/api/bot/status", { cache: "no-store" });
       const json = await res.json();
+
       if (!json._connected) throw new Error("Backend offline");
+
       const { _connected: _, ...data } = json as BotStatus & { _connected: boolean };
-      setStatus(data);
+
+      // FIX: merge com INITIAL_STATUS — campos ausentes da API nunca ficam undefined
+      setStatus((prev) => ({ ...INITIAL_STATUS, ...prev, ...data }));
       setConnected(true);
-      setPriceHistory((prev) => {
-        const next = [
-          ...prev,
-          { time: new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit", second: "2-digit" }), price: data.current_price },
-        ];
-        return next.slice(-60); // últimos 60 pontos
-      });
+
+      // Só adiciona ao histórico se tiver preço real
+      if (data.current_price > 0) {
+        setPriceHistory((prev) => {
+          const next = [
+            ...prev,
+            {
+              time: new Date().toLocaleTimeString("pt-PT", {
+                hour: "2-digit", minute: "2-digit", second: "2-digit",
+              }),
+              price: data.current_price,
+            },
+          ];
+          return next.slice(-60);
+        });
+      }
+
     } catch {
+      // FIX: offline — não simula dados falsos, apenas marca como desligado
+      // O mock anterior mostrava preços aleatórios e confundia o utilizador
       setConnected(false);
-      setStatus((prev) => {
-        const isInitial = prev.last_updated === INITIAL_STATUS.last_updated;
-        if (isInitial) return randomiseMock(prev);
-        return {
-          ...prev,
-          current_price: prev.current_price + (Math.random() - 0.5) * 80,
-          rsi: Math.max(10, Math.min(90, prev.rsi + (Math.random() - 0.5) * 3)),
-          last_updated: new Date().toISOString(),
-        };
-      });
-      setPriceHistory((prev) => {
-        const last = prev[prev.length - 1];
-        const newPrice = last ? last.price + (Math.random() - 0.5) * 80 : 67500;
-        const next = [
-          ...prev,
-          { time: new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit", second: "2-digit" }), price: newPrice },
-        ];
-        return next.slice(-60);
-      });
     }
   }, []);
 
@@ -123,14 +110,14 @@ export function useBotData(pollInterval = 5000) {
   const startBot = async () => {
     try {
       await fetch("/api/bot/start", { method: "POST" });
-      fetchStatus();
+      await fetchStatus();
     } catch { /* offline */ }
   };
 
   const stopBot = async () => {
     try {
       await fetch("/api/bot/stop", { method: "POST" });
-      fetchStatus();
+      await fetchStatus();
     } catch { /* offline */ }
   };
 

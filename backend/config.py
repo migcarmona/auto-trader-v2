@@ -49,7 +49,7 @@ class Config:
 
     # ─── Filtros de qualidade de sinal ───────────────────────
     ADX_MIN         = 20      # só operar em trending (ADX > 20)
-    VOLUME_FACTOR   = 0.8     # volume mínimo = 80% da média de 20 velas
+    VOLUME_FACTOR   = 0.3     # volume mínimo = 80% da média de 20 velas
     # (era VOLUME_MULTIPLIER mas a strategy usava VOLUME_FACTOR — unificado)
 
     # ─── Loop ────────────────────────────────────────────────

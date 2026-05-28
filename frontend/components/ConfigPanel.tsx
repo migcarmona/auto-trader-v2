@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useBotData } from "@/hooks/useBotData";
 import clsx from "clsx";
 
 interface Config {
@@ -16,7 +15,7 @@ interface Config {
 }
 
 // FIX: valores alinhados com config.py corrigido
-const defaultConfig: Config = {
+export default function ConfigPanel({ status }: { status?: BotStatus }) {
   symbol:          "XBTUSDT",  // FIX: era "BTCUSDT"
   interval:        "5",        // FIX: era "1m"
   trade_percent:   10,

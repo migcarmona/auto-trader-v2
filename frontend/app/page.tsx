@@ -182,7 +182,7 @@ export default function Dashboard() {
         {/* Trades + Config */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <TradeHistory trades={trades} />
-          <ConfigPanel />
+          <ConfigPanel status={status} />
         </div>
 
         {/* FIX: posição aberta só renderiza se cryptoHeld > 0 */}

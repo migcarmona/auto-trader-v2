@@ -80,7 +80,7 @@ class ScalpingStrategy:
         df["ema_slow"] = self._calculate_ema(df["close"], cfg.EMA_SLOW)
         df["adx"]      = self._calculate_adx(df, period=14)
         df["atr"]      = self._calculate_atr(df, period=14)
-        df["vol_ma"]   = df["volume"].rolling(20).mean()
+        df["vol_ma"]   = df["volume"].rolling(50).median()
 
         curr = df.iloc[-1]
         prev = df.iloc[-2]

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import type { BotStatus } from "@/hooks/useBotData";
 
 interface Config {
   symbol: string;
@@ -95,7 +96,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function ConfigPanel() {
-  const { status } = useBotData(0); // FIX: lê status atual para inicializar o painel
   const [cfg, setCfg]               = useState<Config>(defaultConfig);
   const [saved, setSaved]           = useState(false);
   const [liveWarning, setLiveWarning] = useState(false);

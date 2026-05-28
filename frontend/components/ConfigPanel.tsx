@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useBotData } from "@/hooks/useBotData";
 import clsx from "clsx";
 
 interface Config {
@@ -14,15 +15,27 @@ interface Config {
   trading_mode: "paper" | "live";
 }
 
+// FIX: valores alinhados com config.py corrigido
 const defaultConfig: Config = {
-  symbol: "BTCUSDT",
-  interval: "1m",
-  trade_percent: 10,
-  stop_loss_pct: 0.5,
-  take_profit_pct: 1.0,
-  rsi_oversold: 35,
-  rsi_overbought: 65,
-  trading_mode: "paper",
+  symbol:          "XBTUSDT",  // FIX: era "BTCUSDT"
+  interval:        "5",        // FIX: era "1m"
+  trade_percent:   10,
+  stop_loss_pct:   1.0,        // FIX: era 0.5 (menor que as fees!)
+  take_profit_pct: 2.0,        // FIX: era 1.0
+  rsi_oversold:    35,
+  rsi_overbought:  65,
+  trading_mode:    "paper",
+};
+
+// FIX: símbolos e intervalos no formato correto da Kraken
+const SYMBOLS   = ["XBTUSDT", "XETHUSDT", "SOLUSDT"];
+const INTERVALS = ["5", "15", "30", "60"];  // FIX: removidos 1m e 3m
+
+const INTERVAL_LABELS: Record<string, string> = {
+  "5":  "5m",
+  "15": "15m",
+  "30": "30m",
+  "60": "1h",
 };
 
 interface FieldProps {
@@ -32,9 +45,12 @@ interface FieldProps {
   type?: string;
   suffix?: string;
   options?: string[];
+  optionLabels?: Record<string, string>;
+  min?: number;
+  step?: number;
 }
 
-function Field({ label, value, onChange, type = "text", suffix, options }: FieldProps) {
+function Field({ label, value, onChange, type = "text", suffix, options, optionLabels, min, step }: FieldProps) {
   const inputClass =
     "bg-[#0d1117] border border-border rounded px-2.5 py-1.5 text-[11px] text-text font-mono " +
     "focus:outline-none focus:border-blue/60 focus:ring-1 focus:ring-blue/20 transition-all duration-150";
@@ -49,12 +65,18 @@ function Field({ label, value, onChange, type = "text", suffix, options }: Field
             onChange={(e) => onChange(e.target.value)}
             className={inputClass + " cursor-pointer"}
           >
-            {options.map((o) => <option key={o} value={o}>{o}</option>)}
+            {options.map((o) => (
+              <option key={o} value={o}>
+                {optionLabels?.[o] ?? o}
+              </option>
+            ))}
           </select>
         ) : (
           <input
             type={type}
             value={value}
+            min={min}
+            step={step}
             onChange={(e) => onChange(e.target.value)}
             className={inputClass + " w-20 text-right"}
           />
@@ -74,9 +96,22 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function ConfigPanel() {
-  const [cfg, setCfg] = useState<Config>(defaultConfig);
-  const [saved, setSaved] = useState(false);
+  const { status } = useBotData(0); // FIX: lê status atual para inicializar o painel
+  const [cfg, setCfg]               = useState<Config>(defaultConfig);
+  const [saved, setSaved]           = useState(false);
   const [liveWarning, setLiveWarning] = useState(false);
+
+  // FIX: sincroniza painel com valores reais do bot ao montar
+  useEffect(() => {
+    if (status?.symbol) {
+      setCfg((prev) => ({
+        ...prev,
+        symbol:          status.symbol        ?? prev.symbol,
+        interval:        status.interval      ?? prev.interval,
+        trading_mode:    status.trading_mode  ?? prev.trading_mode,
+      }));
+    }
+  }, [status?.symbol]);
 
   const update = (key: keyof Config) => (val: string) => {
     if (key === "trading_mode" && val === "live") {
@@ -96,16 +131,35 @@ export default function ConfigPanel() {
     setSaved(false);
   };
 
+  // FIX: validação antes de guardar
+  const validate = (): string | null => {
+    if (cfg.stop_loss_pct < 0.8)
+      return "Stop-loss mínimo de 0.8% (fees Kraken = 0.52%)";
+    if (cfg.take_profit_pct <= cfg.stop_loss_pct)
+      return "Take-profit deve ser maior que o stop-loss";
+    if (cfg.trade_percent < 1 || cfg.trade_percent > 50)
+      return "% por trade deve estar entre 1% e 50%";
+    return null;
+  };
+
+  const [error, setError] = useState<string | null>(null);
+
   const handleSave = async () => {
+    const err = validate();
+    if (err) { setError(err); return; }
+    setError(null);
+
     try {
       await fetch("/api/bot/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cfg),
       });
-    } catch { /* offline */ }
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      setError("Erro ao guardar — backend offline");
+    }
   };
 
   return (
@@ -118,9 +172,7 @@ export default function ConfigPanel() {
           onClick={() => update("trading_mode")("paper")}
           className={clsx(
             "flex-1 py-2 text-[11px] font-mono font-600 tracking-wider uppercase transition-all duration-200",
-            cfg.trading_mode === "paper"
-              ? "bg-blue/15 text-blue"
-              : "text-dim hover:text-text"
+            cfg.trading_mode === "paper" ? "bg-blue/15 text-blue" : "text-dim hover:text-text"
           )}
         >
           Paper
@@ -130,9 +182,7 @@ export default function ConfigPanel() {
           onClick={() => update("trading_mode")("live")}
           className={clsx(
             "flex-1 py-2 text-[11px] font-mono font-600 tracking-wider uppercase transition-all duration-200",
-            cfg.trading_mode === "live"
-              ? "bg-red/15 text-red"
-              : "text-dim hover:text-text"
+            cfg.trading_mode === "live" ? "bg-red/15 text-red" : "text-dim hover:text-text"
           )}
         >
           ⚠ Live
@@ -166,18 +216,36 @@ export default function ConfigPanel() {
 
       <div className="flex flex-col">
         <SectionLabel>Par / Intervalo</SectionLabel>
-        <Field label="Par" value={cfg.symbol} onChange={update("symbol")} options={["BTCUSDT", "ETHUSDT", "SOLUSDT"]} />
-        <Field label="Intervalo" value={cfg.interval} onChange={update("interval")} options={["1m", "3m", "5m", "15m"]} />
+        <Field
+          label="Par"
+          value={cfg.symbol}
+          onChange={update("symbol")}
+          options={SYMBOLS}
+        />
+        <Field
+          label="Intervalo"
+          value={cfg.interval}
+          onChange={update("interval")}
+          options={INTERVALS}
+          optionLabels={INTERVAL_LABELS}  // FIX: mostra "5m" mas envia "5"
+        />
 
         <SectionLabel>Gestão de risco</SectionLabel>
-        <Field label="% por trade" value={cfg.trade_percent} onChange={update("trade_percent")} type="number" suffix="%" />
-        <Field label="Stop-loss" value={cfg.stop_loss_pct} onChange={update("stop_loss_pct")} type="number" suffix="%" />
-        <Field label="Take-profit" value={cfg.take_profit_pct} onChange={update("take_profit_pct")} type="number" suffix="%" />
+        <Field label="% por trade"  value={cfg.trade_percent}   onChange={update("trade_percent")}   type="number" suffix="%" min={1}   step={1} />
+        <Field label="Stop-loss"    value={cfg.stop_loss_pct}   onChange={update("stop_loss_pct")}   type="number" suffix="%" min={0.8} step={0.1} />
+        <Field label="Take-profit"  value={cfg.take_profit_pct} onChange={update("take_profit_pct")} type="number" suffix="%" min={0.8} step={0.1} />
 
         <SectionLabel>RSI</SectionLabel>
-        <Field label="Oversold" value={cfg.rsi_oversold} onChange={update("rsi_oversold")} type="number" />
-        <Field label="Overbought" value={cfg.rsi_overbought} onChange={update("rsi_overbought")} type="number" />
+        <Field label="Oversold"     value={cfg.rsi_oversold}    onChange={update("rsi_oversold")}    type="number" min={10} step={1} />
+        <Field label="Overbought"   value={cfg.rsi_overbought}  onChange={update("rsi_overbought")}  type="number" min={10} step={1} />
       </div>
+
+      {/* FIX: erro de validação visível */}
+      {error && (
+        <div className="text-red text-[10px] font-mono border border-red/20 bg-red/5 rounded px-3 py-2">
+          ⚠ {error}
+        </div>
+      )}
 
       <button
         onClick={handleSave}
